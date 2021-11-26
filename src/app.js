@@ -6,6 +6,13 @@ import "./style.css";
  * @param store {Store} Состояние с действиями
  */
 function App({ store }) {
+  function defineWord(value) {
+    value = value % 100;
+    let num = value % 10;
+    if (value > 10 && value < 20) return "раз";
+    if (num > 1 && num < 5) return "раза";
+    return "раз";
+  }
   return (
     <div className="App">
       <div className="App__head">
@@ -28,7 +35,9 @@ function App({ store }) {
                 <div className="Item__title">
                   {item.title} |
                   {item.count > 0 ? (
-                    <span> Выделялся {item.count} раз </span>
+                    <span>
+                      Выделялся {item.count} {defineWord(item.count)}
+                    </span>
                   ) : null}
                 </div>
                 <div className="Item__actions">

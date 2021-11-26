@@ -75,7 +75,8 @@ class Store {
       items: this.state.items.map((item) => {
         if (item.code === code) {
           item.selected = !item.selected;
-          item.hasOwnProperty("count") ? item.count++ : (item.count = 1);
+          if (item.selected)
+            item.hasOwnProperty("count") ? item.count++ : (item.count = 1);
         }
         return item;
       }),
