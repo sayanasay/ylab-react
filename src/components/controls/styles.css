@@ -1,6 +1,12 @@
 /* Контрол с общими действиями */
-.Controls{
-    display: flex;
-    justify-content: flex-end;
-    padding: 20px;
+.Controls {
+  display: flex;
+  justify-content: flex-end;
+  padding: 20px;
+}
+.Cart__info {
+  padding-right: 20px;
+}
+.Cart__info span {
+  font-weight: 600;
 }

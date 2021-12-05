@@ -1,3 +1,5 @@
+import item from "./components/item";
+
 class Store {
   constructor(initState) {
     // Состояние приложения (данные)
@@ -82,6 +84,32 @@ class Store {
         return item;
       }),
     });
+  }
+
+  /**
+   * Добавление в корзину
+   * @param code
+   */
+  addItem(item) {
+    if (this.state.cart.find((el) => el.code === item.code)) {
+      this.setState({
+        ...this.state,
+        cart: this.state.cart.map((el) => {
+          if (el.code === item.code)
+            return { ...el, quantity: el.quantity + 1 };
+          return el;
+        }),
+      });
+    } else
+      this.setState({
+        ...this.state,
+        cart: this.state.cart.concat({
+          code: item.code,
+          title: item.title,
+          quantity: 1,
+          price: item.price,
+        }),
+      });
   }
 }
 

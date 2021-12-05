@@ -1,0 +1,37 @@
+.Backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  z-index: 10;
+  background: rgba(0, 0, 0, 0.75);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.Cart {
+  position: fixed;
+  width: 80%;
+  height: 80%;
+  max-width: 960px;
+  max-height: 603px;
+  z-index: 1;
+  overflow: scroll;
+  background: #fff;
+}
+.Cart__head {
+  height: 80px;
+  background: #f5f5f5;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 20px;
+}
+.Cart__sum {
+  font-weight: 600;
+}
+.Cart__empty {
+  padding: 20px;
+}
