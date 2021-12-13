@@ -1,15 +1,13 @@
 import React from "react";
 import propTypes from "prop-types";
-import Item from "../item";
 import "./styles.css";
 
-function List({ items, onAddItem }) {
-  console.log("List");
+function List({ items, renderItem }) {
   return (
     <div className="List">
       {items.map((item) => (
-        <div className="List__item" key={item.code}>
-          <Item item={item} onAdd={onAddItem} />
+        <div key={item._id} className="List__item">
+          {renderItem(item)}
         </div>
       ))}
     </div>
@@ -18,12 +16,14 @@ function List({ items, onAddItem }) {
 
 List.propTypes = {
   items: propTypes.arrayOf(propTypes.object).isRequired,
-  onAddItem: propTypes.func,
+  renderItem: propTypes.func,
 };
 
 List.defaultProps = {
   items: [],
-  onAddItem: () => {},
+  renderItem: (item) => {
+    return item.toString();
+  },
 };
 
 export default React.memo(List);

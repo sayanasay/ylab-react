@@ -1,0 +1,20 @@
+.Pagination {
+  display: flex;
+  list-style: none;
+  justify-content: flex-end;
+  padding: 20px;
+  margin: 0;
+}
+.Pagination__page {
+  padding: 0 3px;
+  cursor: pointer;
+}
+.Pagination__page:hover {
+  background: #e1e1e1;
+}
+.Pagination__page-current,
+.Pagination__page-current:hover {
+  background: #000;
+  color: #fff;
+  cursor: default;
+}

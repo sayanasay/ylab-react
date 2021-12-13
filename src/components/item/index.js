@@ -1,24 +1,19 @@
-import React, { useCallback, useState } from "react";
+import React from "react";
 import propTypes from "prop-types";
-import plural from "plural-ru";
 import "./styles.css";
+import numberFormat from "../../utils/number-format";
+import { Link } from "react-router-dom";
 
 function Item({ item, onAdd }) {
-  console.log("Item", item.title);
-
   return (
-    <div className={"Item" + (item.selected ? " Item_selected" : "")}>
-      <div className="Item__number">{item.code}</div>
-      <div className="Item__title">{item.title}</div>
-      <div className="Item__actions">
-        <div className="Item__price">
-          {item.price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ")} ₽
-        </div>
-        {item.quantity ? (
-          `${item.quantity} шт.`
-        ) : (
-          <button onClick={() => onAdd(item)}>Добавить</button>
-        )}
+    <div className="Item">
+      <div className="Item__number">{item._key}</div>
+      <div className="Item__title">
+        <Link to={item._id}>{item.title}</Link>
+      </div>
+      <div className="Item__right">
+        <div className="Item__price">{numberFormat(item.price)} ₽</div>
+        <button onClick={() => onAdd(item)}>Добавить</button>
       </div>
     </div>
   );
@@ -26,7 +21,7 @@ function Item({ item, onAdd }) {
 
 Item.propTypes = {
   item: propTypes.object.isRequired,
-  onAdd: propTypes.func.isRequired,
+  onAdd: propTypes.func,
 };
 
 Item.defaultProps = {
