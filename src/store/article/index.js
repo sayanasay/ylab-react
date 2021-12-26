@@ -28,6 +28,7 @@ class ArticleStore extends StoreModule {
     this.updateState({
       ...this.getState(),
       waiting: true,
+      error: {},
     });
 
     try {
@@ -67,10 +68,9 @@ class ArticleStore extends StoreModule {
       });
       const json = await response.json();
       if (json.error) {
-        const errorText = makeErrorText(json.error);
         this.updateState({
           ...this.getState(),
-          error: `Error: ${json.error.message}: ${errorText}`,
+          error: makeErrorText(json.error),
         });
         throw new Error(json.error);
       }

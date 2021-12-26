@@ -32,7 +32,6 @@ const ManageArticle = () => {
     categories: state.formInfo.categories,
     countries: state.formInfo.countries,
     error: state.article.error,
-    isDeleted: state.article.isDeleted,
   }));
 
   const categories = sortCategories(select.categories);
@@ -96,10 +95,10 @@ const ManageArticle = () => {
           countries={select.countries}
           categories={categories}
         />
+        {select.error?.message && <FormError error={select.error} />}
         <button className="Form-button" onClick={() => callbacks.onDelete(formData._id)}>
           Удалить
         </button>
-        {select.error?.message && <FormError error={select.error} />}
       </Spinner>
     </Layout>
   );
