@@ -14,14 +14,15 @@ class BasketStore extends StoreModule {
 
   /**
    * Добавление товара в корзину по коду
-   * @param product {*}
+   * @param id {*}
    */
-  add(product) {
+  async add(id) {
     // Ищем товар в корзие, чтобы увеличить его количество.
     let exists = false;
+
     const items = this.getState().items.map((item) => {
       // Искомый товар
-      if (item._id === product._id) {
+      if (item._id === id) {
         exists = true;
         return { ...item, amount: item.amount + 1 };
       }
@@ -29,10 +30,16 @@ class BasketStore extends StoreModule {
     });
 
     if (!exists) {
-      // Если товар не был найден в корзине, то добавляем его из каталога
-      // Поиск товара в каталоге, чтобы его в корзину добавить
-      // const item = this.store.getState().catalog.items.find(item => item._id === id);
-      items.push({ ...product, amount: 1 });
+      try {
+        // Если товар не был найден в корзине, то добавляем новый
+        const response = await fetch(`/api/v1/articles/${id}`);
+        const json = await response.json();
+        // Поиск товара в каталоге, чтобы его в корзину добавить
+        const item = json.result;
+        items.push({ ...item, amount: 1 });
+      } catch (e) {
+        console.error("товар не найден");
+      }
     }
 
     // Считаем суммы

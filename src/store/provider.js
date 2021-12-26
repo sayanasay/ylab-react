@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import propTypes from "prop-types";
 
 /**
@@ -14,22 +14,15 @@ export const StoreContext = React.createContext({});
  * Тот кто использует состояние из store долежн сам подписаться на их изменения.
  * напрямую store используется, чтобы вызвать его методы изменения состояния.
  */
-function StoreProvider({store, children}) {
+function StoreProvider({ store, children }) {
   // В провайдер передатся объект хранилища store,
   // после чего store можно получиь через useContext(StoreContext) в любом компоненте
-  return (
-    <StoreContext.Provider value={store}>
-      {children}
-    </StoreContext.Provider>
-  );
+  return <StoreContext.Provider value={store}>{children}</StoreContext.Provider>;
 }
 
 StoreProvider.propTypes = {
   store: propTypes.object.isRequired,
-  children: propTypes.oneOfType([
-    propTypes.arrayOf(propTypes.node),
-    propTypes.node
-  ]).isRequired,
-}
+  children: propTypes.oneOfType([propTypes.arrayOf(propTypes.node), propTypes.node]).isRequired,
+};
 
 export default React.memo(StoreProvider);

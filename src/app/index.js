@@ -1,9 +1,11 @@
 import React from "react";
+import { Routes, Route } from "react-router-dom";
 import Main from "./main";
 import Basket from "./basket";
 import useSelector from "../utils/use-selector";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import ItemPage from "./item-page";
+import Article from "./article";
+import ManageArticle from "./manage-article";
+import CreateArticle from "./create-article";
 
 /**
  * Приложение
@@ -14,13 +16,15 @@ function App() {
   }));
 
   return (
-    <BrowserRouter>
+    <>
       <Routes>
-        <Route exact path="/" element={<Main />} />
-        <Route path="/:slug" element={<ItemPage />} />
+        <Route path={""} element={<Main />} />
+        <Route path={"/articles/:id"} element={<Article />} />
+        <Route path={"/manage/:id"} element={<ManageArticle />} />
+        <Route path={"/create/"} element={<CreateArticle />} />
       </Routes>
       {select.name === "basket" && <Basket />}
-    </BrowserRouter>
+    </>
   );
 }
 

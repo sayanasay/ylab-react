@@ -1,4 +1,17 @@
 import StoreModule from "../module";
+import qs from "qs";
+
+const QS_OPTIONS = {
+  stringify: {
+    addQueryPrefix: true,
+    arrayFormat: "comma",
+    encode: false,
+  },
+  parse: {
+    ignoreQueryPrefix: true,
+    comma: true,
+  },
+};
 
 class CatalogStore extends StoreModule {
   /**
@@ -8,31 +21,85 @@ class CatalogStore extends StoreModule {
     return {
       items: [],
       count: 0,
-      page: 1,
+      params: {
+        page: 1,
+        limit: 10,
+        sort: "key",
+        query: "",
+        category: "all",
+      },
+      waiting: true,
     };
   }
 
   /**
-   * Установить страницу
+   * Инициализация параметров.
+   * Восстановление из query string адреса
+   * @param params
+   * @return {Promise<void>}
    */
-  set(page) {
-    this.setState({
-      page: page,
-    });
+  async initParams(params = {}) {
+    // Параметры из URl. Их нужно валидирвать, приводить типы и брать толкьо нужные
+    const urlParams = qs.parse(window.location.search, QS_OPTIONS.parse) || {};
+    let validParams = {};
+    if (urlParams.page) validParams.page = Number(urlParams.page) || 1;
+    if (urlParams.limit) validParams.limit = Number(urlParams.limit) || 10;
+    if (urlParams.sort) validParams.sort = urlParams.sort;
+    if (urlParams.query) validParams.query = urlParams.query;
+    if (urlParams.category) validParams.category = urlParams.category;
+
+    // Итоговые параметры из начальных, из URL и из переданных явно
+    const newParams = { ...this.initState().params, ...validParams, ...params };
+    // Установка параметров и подгрузка данных
+    await this.setParams(newParams, true);
+  }
+
+  /**
+   * Сброс параметров к начальным
+   * @param params
+   * @return {Promise<void>}
+   */
+  async resetParams(params = {}) {
+    // Итоговые параметры из начальных, из URL и из переданных явно
+    const newParams = { ...this.initState().params, ...params };
+    // Установк параметров и подгрузка данных
+    await this.setParams(newParams);
   }
 
   /**
    * Загрузка списка товаров
    */
-  async load(page) {
-    const skip = (page - 1) * 10;
-    const response = await fetch(`/api/v1/articles?limit=10&skip=${skip}&fields=items(*),count`);
-    const json = await response.json();
+  async setParams(params = {}, historyReplace = false) {
+    const newParams = { ...this.getState().params, ...params };
+
     this.setState({
+      ...this.getState(),
+      params: newParams,
+      waiting: true,
+    });
+
+    const skip = (newParams.page - 1) * newParams.limit;
+    const category = newParams.category !== "all" ? `&search[category]=${newParams.category}` : "";
+    const response = await fetch(
+      `/api/v1/articles?limit=${newParams.limit}&skip=${skip}&fields=items(*),count&sort=${newParams.sort}&search[query]=${newParams.query}${category}`
+    );
+    const json = await response.json();
+
+    this.setState({
+      ...this.getState(),
       items: json.result.items,
       count: json.result.count,
-      page,
+      waiting: false,
     });
+
+    // Запоминаем параметры в URL
+    let queryString = qs.stringify(newParams, QS_OPTIONS.stringify);
+    const url = window.location.pathname + queryString + window.location.hash;
+    if (historyReplace) {
+      window.history.replaceState({}, "", url);
+    } else {
+      window.history.pushState({}, "", url);
+    }
   }
 }
 

@@ -20,10 +20,10 @@ function Basket() {
   };
 
   const renders = {
-    itemBasket: useCallback((item) => {
-      return <ItemBasket item={item} onClose={callbacks.closeModal} />;
-    }, []),
-  };
+    itemBasket: useCallback(item => {
+      return <ItemBasket item={item} link={`/articles/${item._id}`} onLink={callbacks.closeModal}/>
+    }, [])
+  }
 
   return (
     <LayoutModal title={"Корзина"} onClose={callbacks.closeModal}>

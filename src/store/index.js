@@ -85,10 +85,10 @@ class Store {
   }
 
   /**
-   * @return {ItemStore}
+   * @return {FormInfoStore}
    */
-  get itemPage() {
-    return this.get("itemPage");
+  get formInfo() {
+    return this.get("formInfo");
   }
 }
 

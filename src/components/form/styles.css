@@ -1,0 +1,16 @@
+.Form {
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+}
+
+.Form-label {
+  display: flex;
+  padding: 10px;
+  flex-direction: column;
+}
+
+.Form-button {
+  margin: 10px;
+  width: 100px;
+}
