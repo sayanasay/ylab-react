@@ -8,10 +8,10 @@ import useInit from "../../utils/use-init";
 
 const Form = (props) => {
   const [formData, setFormData] = useState(props.article);
-  const maidInProp = props.article.maidIn ? props.article.maidIn?._id : props.countries[0]?._id;
+  const maidInProp = props.article.maidIn ? props.article.maidIn?._id : props.countries[0]?.value;
   const categoryProp = props.article.category
     ? props.article.category?._id
-    : props.categories[0]?._id;
+    : props.categories[0]?.value;
 
   useInit(() => {
     setFormData({
@@ -24,6 +24,8 @@ const Form = (props) => {
       price: props.article.price,
     });
   }, [props.article]);
+
+  console.log(formData);
 
   const onChange = useCallback((value, field) => {
     setFormData((prevState) => {
@@ -60,7 +62,7 @@ const Form = (props) => {
         Страна производитель
         <Select
           onChange={onChange}
-          value={formData.maidIn?.value}
+          value={formData.maidIn?._id}
           options={props.countries}
           field="maidIn"
         />
@@ -69,7 +71,7 @@ const Form = (props) => {
         Категория
         <Select
           onChange={onChange}
-          value={formData.category?.value}
+          value={formData.category?._id}
           options={props.categories}
           field="category"
         />
@@ -99,6 +101,7 @@ const Form = (props) => {
 
 Form.propTypes = {
   onSubmit: propTypes.func,
+  onDelete: propTypes.func,
   article: propTypes.object,
   countries: propTypes.array,
   categories: propTypes.array,
@@ -106,6 +109,7 @@ Form.propTypes = {
 
 Form.defaultProps = {
   onSubmit: () => {},
+  onDelete: () => {},
 };
 
 export default Form;
