@@ -26,7 +26,6 @@ class ArticleStore extends StoreModule {
    */
   async load(id) {
     this.updateState({
-      ...this.getState(),
       waiting: true,
       error: {},
     });
@@ -39,13 +38,11 @@ class ArticleStore extends StoreModule {
       if (json.error) throw new Error(json.error);
 
       this.updateState({
-        ...this.getState(),
         data: json.result,
         waiting: false,
       });
     } catch (e) {
       this.updateState({
-        ...this.getState(),
         data: {},
         waiting: false,
       });
@@ -54,7 +51,6 @@ class ArticleStore extends StoreModule {
 
   async edit(article) {
     this.updateState({
-      ...this.getState(),
       error: {},
       waiting: true,
     });
@@ -69,7 +65,7 @@ class ArticleStore extends StoreModule {
       const json = await response.json();
       if (json.error) {
         this.updateState({
-          ...this.getState(),
+          data: article,
           error: makeErrorText(json.error),
         });
         throw new Error(json.error);
@@ -81,7 +77,6 @@ class ArticleStore extends StoreModule {
       });
     } catch (e) {
       this.updateState({
-        ...this.getState(),
         waiting: false,
       });
     }
@@ -89,7 +84,6 @@ class ArticleStore extends StoreModule {
 
   async delete(id) {
     this.updateState({
-      ...this.getState(),
       waiting: true,
       error: {},
     });
@@ -100,7 +94,6 @@ class ArticleStore extends StoreModule {
       const json = await response.json();
       if (json.error) {
         this.updateState({
-          ...this.getState(),
           error: makeErrorText(json.error),
         });
         throw new Error(json.error);
@@ -113,7 +106,6 @@ class ArticleStore extends StoreModule {
       return json.result;
     } catch (e) {
       this.updateState({
-        ...this.getState(),
         waiting: false,
       });
     }
@@ -121,7 +113,6 @@ class ArticleStore extends StoreModule {
 
   async create(article) {
     this.updateState({
-      ...this.getState(),
       error: {},
       waiting: true,
     });
@@ -136,7 +127,7 @@ class ArticleStore extends StoreModule {
       const json = await response.json();
       if (json.error) {
         this.updateState({
-          ...this.getState(),
+          data: article,
           error: makeErrorText(json.error),
         });
         throw new Error(json.error);
@@ -149,7 +140,6 @@ class ArticleStore extends StoreModule {
       return json.result;
     } catch (e) {
       this.updateState({
-        ...this.getState(),
         waiting: false,
       });
     }

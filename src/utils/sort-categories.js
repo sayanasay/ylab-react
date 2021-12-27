@@ -2,7 +2,7 @@ export default function sortCategories(arr, parentId = null, result = [], prefix
   arr.forEach((el) => {
     if (el.parent?._id === parentId || el.parent === parentId) {
       result.push({ ...el, title: "-".repeat(prefixCount).concat(" ", el.title) });
-      sortCategories(arr, el._id, result, prefixCount + 1);
+      sortCategories(arr, el.value, result, prefixCount + 1);
     }
   });
   return result;

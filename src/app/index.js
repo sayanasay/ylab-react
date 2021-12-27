@@ -5,7 +5,6 @@ import Basket from "./basket";
 import useSelector from "../utils/use-selector";
 import Article from "./article";
 import ManageArticle from "./manage-article";
-import CreateArticle from "./create-article";
 
 /**
  * Приложение
@@ -21,7 +20,7 @@ function App() {
         <Route path={""} element={<Main />} />
         <Route path={"/articles/:id"} element={<Article />} />
         <Route path={"/manage/:id"} element={<ManageArticle />} />
-        <Route path={"/create/"} element={<CreateArticle />} />
+        <Route path={"/create/"} element={<ManageArticle />} />
       </Routes>
       {select.name === "basket" && <Basket />}
     </>

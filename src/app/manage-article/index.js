@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback } from "react";
 import { useParams } from "react-router";
 import Layout from "../../components/layout";
 import useInit from "../../utils/use-init";
@@ -18,7 +18,11 @@ const ManageArticle = () => {
   let navigate = useNavigate();
 
   useInit(async () => {
-    await store.get("article").load(params.id);
+    if (params.id) {
+      await store.get("article").load(params.id);
+    } else {
+      await store.get("article").setState(store.get("article").initState());
+    }
   }, [params.id]);
 
   useInit(async () => {
@@ -29,6 +33,7 @@ const ManageArticle = () => {
   const select = useSelector((state) => ({
     article: state.article.data,
     waiting: state.article.waiting,
+    formInfoWaiting: state.formInfo.waiting,
     categories: state.formInfo.categories,
     countries: state.formInfo.countries,
     error: state.article.error,
@@ -36,44 +41,14 @@ const ManageArticle = () => {
 
   const categories = sortCategories(select.categories);
 
-  const [formData, setFormData] = useState(select.article);
-
-  useInit(() => {
-    setFormData({
-      _id: select.article._id,
-      title: select.article.title,
-      description: select.article.description,
-      maidIn: { _id: select.article.maidIn?._id },
-      category: { _id: select.article.category?._id },
-      edition: select.article.edition,
-      price: select.article.price,
-    });
-  }, [select.article]);
-
   const callbacks = {
-    onSubmit: useCallback(
-      (e) => {
+    onEdit: useCallback(
+      (e, formData) => {
         e.preventDefault();
         store.get("article").edit(formData);
       },
-      [store, formData]
+      [store]
     ),
-    onChangeInput: useCallback((value, field) => {
-      setFormData((prevState) => {
-        return {
-          ...prevState,
-          [field]: value,
-        };
-      });
-    }, []),
-    onChangeSelect: useCallback((value, field) => {
-      setFormData((prevState) => {
-        return {
-          ...prevState,
-          [field]: { ...prevState[field], _id: value },
-        };
-      });
-    }, []),
     onDelete: useCallback(
       async (id) => {
         const result = await store.get("article").delete(id);
@@ -81,24 +56,28 @@ const ManageArticle = () => {
       },
       [store]
     ),
+    onCreate: useCallback(
+      async (e, formData) => {
+        e.preventDefault();
+        const result = await store.get("article").create({ name: formData.title, ...formData });
+        if (result) navigate("/");
+      },
+      [store]
+    ),
   };
 
   return (
-    <Layout head={<h1>{select.article.title}</h1>}>
+    <Layout head={<h1>{select.article.title ? select.article.title : "Создать товар"}</h1>}>
       <Header />
-      <Spinner active={select.waiting}>
+      <Spinner active={select.waiting || !!select.formInfoWaiting}>
         <Form
-          onSubmit={callbacks.onSubmit}
-          onChangeInput={callbacks.onChangeInput}
-          onChangeSelect={callbacks.onChangeSelect}
-          formData={formData}
+          article={select.article}
+          onSubmit={params.id ? callbacks.onEdit : callbacks.onCreate}
           countries={select.countries}
           categories={categories}
+          onDelete={callbacks.onDelete}
         />
         {select.error?.message && <FormError error={select.error} />}
-        <button className="Form-button" onClick={() => callbacks.onDelete(formData._id)}>
-          Удалить
-        </button>
       </Spinner>
     </Layout>
   );

@@ -7,7 +7,7 @@ class FormInfoStore extends StoreModule {
   initState() {
     return {
       categories: [],
-      waiting: true,
+      waiting: 0,
       countries: [],
     };
   }
@@ -17,8 +17,7 @@ class FormInfoStore extends StoreModule {
    */
   async loadCategories() {
     this.updateState({
-      ...this.getState(),
-      waiting: true,
+      waiting: this.getState().waiting + 1,
       categories: [],
     });
 
@@ -28,15 +27,13 @@ class FormInfoStore extends StoreModule {
       if (json.error) throw new Error(json.error);
 
       this.updateState({
-        ...this.getState(),
-        categories: json.result.items,
-        waiting: false,
+        categories: json.result.items.map((el) => ({ value: el._id, ...el })),
+        waiting: this.getState().waiting - 1,
       });
     } catch (e) {
       this.updateState({
-        ...this.getState(),
         categories: [],
-        waiting: false,
+        waiting: this.getState().waiting - 1,
       });
     }
   }
@@ -46,8 +43,7 @@ class FormInfoStore extends StoreModule {
    */
   async loadCountries() {
     this.updateState({
-      ...this.getState(),
-      waiting: true,
+      waiting: this.getState().waiting + 1,
       countries: [],
     });
 
@@ -57,15 +53,13 @@ class FormInfoStore extends StoreModule {
       if (json.error) throw new Error(json.error);
 
       this.updateState({
-        ...this.getState(),
-        countries: json.result.items,
-        waiting: false,
+        countries: json.result.items.map((el) => ({ value: el._id, ...el })),
+        waiting: this.getState().waiting - 1,
       });
     } catch (e) {
       this.updateState({
-        ...this.getState(),
         countries: [],
-        waiting: false,
+        waiting: this.getState().waiting - 1,
       });
     }
   }

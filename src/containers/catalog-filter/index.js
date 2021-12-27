@@ -25,14 +25,14 @@ function CatalogFilter() {
   const options = {
     sort: useMemo(
       () => [
-        { _id: "key", title: "По коду" },
-        { _id: "title.ru", title: "По именованию" },
-        { _id: "-price", title: "Сначала дорогие" },
-        { _id: "edition", title: "Древние" },
+        { value: "key", title: "По коду" },
+        { value: "title.ru", title: "По именованию" },
+        { value: "-price", title: "Сначала дорогие" },
+        { value: "edition", title: "Древние" },
       ],
       []
     ),
-    categories: [{ _id: "all", title: "Все" }, ...sortCategories(select.categories)],
+    categories: [{ value: "all", title: "Все" }, ...sortCategories(select.categories)],
   };
 
   const callbacks = {
