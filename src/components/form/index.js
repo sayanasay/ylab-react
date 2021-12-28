@@ -4,28 +4,22 @@ import Select from "../../components/select";
 import propTypes from "prop-types";
 import { cn } from "@bem-react/classname";
 import "./styles.css";
-import useInit from "../../utils/use-init";
 
 const Form = (props) => {
-  const [formData, setFormData] = useState(props.article);
   const maidInProp = props.article.maidIn ? props.article.maidIn?._id : props.countries[0]?.value;
   const categoryProp = props.article.category
     ? props.article.category?._id
     : props.categories[0]?.value;
 
-  useInit(() => {
-    setFormData({
-      _id: props.article._id,
-      title: props.article.title,
-      description: props.article.description,
-      maidIn: { _id: maidInProp },
-      category: { _id: categoryProp },
-      edition: props.article.edition,
-      price: props.article.price,
-    });
-  }, [props.article]);
-
-  console.log(formData);
+  const [formData, setFormData] = useState({
+    _id: props.article._id,
+    title: props.article.title,
+    description: props.article.description,
+    maidIn: { _id: maidInProp },
+    category: { _id: categoryProp },
+    edition: props.article.edition,
+    price: props.article.price,
+  });
 
   const onChange = useCallback((value, field) => {
     setFormData((prevState) => {
